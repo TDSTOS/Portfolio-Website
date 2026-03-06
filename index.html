@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laurin — Developer Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a26;
+            --accent: #7F52FF;
+            --accent-dim: rgba(127, 82, 255, 0.15);
+            --accent-glow: rgba(127, 82, 255, 0.4);
+            --text: #e4e4ef;
+            --text-dim: #8888a0;
+            --border: rgba(255, 255, 255, 0.06);
+            --radius: 16px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── Grain overlay ── */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* ── Ambient glow ── */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb.one {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-glow);
+            top: -150px;
+            left: -100px;
+            opacity: 0.25;
+            animation: float1 20s ease-in-out infinite;
+        }
+
+        .glow-orb.two {
+            width: 400px;
+            height: 400px;
+            background: rgba(80, 200, 255, 0.2);
+            bottom: -100px;
+            right: -100px;
+            opacity: 0.2;
+            animation: float2 25s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(80px, 60px);
+            }
+        }
+
+        @keyframes float2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-60px, -80px);
+            }
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 10, 15, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 5rem;
+        }
+
+        .hero-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.2s;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.4s;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            max-width: 550px;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.6s;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.8s;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.8rem;
+            border-radius: 50px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 30px var(--accent-dim);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px var(--accent-glow);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ── Section headers ── */
+        .section-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-dim);
+            max-width: 500px;
+            margin-bottom: 3rem;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), var(--accent-dim), var(--border), transparent);
+        }
+
+        /* ── Tech Stack ── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-dim), transparent);
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .skill-card:hover {
+            border-color: rgba(127, 82, 255, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .skill-card:hover::before {
+            opacity: 1;
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+
+        .skill-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .skill-exp {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 0.3rem;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+        }
+
+        /* ── Project card ── */
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s;
+        }
+
+        .project-card:hover {
+            border-color: rgba(127, 82, 255, 0.3);
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #50c8ff);
+        }
+
+        .project-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            background: var(--accent-dim);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .project-card p {
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        /* ── Freelance ── */
+        .freelance-card {
+            background: linear-gradient(135deg, var(--bg-card), rgba(127, 82, 255, 0.08));
+            border: 1px solid rgba(127, 82, 255, 0.2);
+            border-radius: var(--radius);
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .freelance-text h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.5px;
+        }
+
+        .freelance-text p {
+            color: var(--text-dim);
+        }
+
+        /* ── Socials / Contact ── */
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .social-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .social-card:hover {
+            border-color: rgba(127, 82, 255, 0.3);
+            transform: translateY(-3px);
+            background: var(--bg-card-hover);
+        }
+
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .social-icon.github {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .social-icon.discord {
+            background: rgba(88, 101, 242, 0.15);
+            color: #5865F2;
+        }
+
+        .social-icon.twitch {
+            background: rgba(145, 70, 255, 0.15);
+            color: #9146FF;
+        }
+
+        .social-icon.youtube {
+            background: rgba(255, 0, 0, 0.12);
+            color: #FF0000;
+        }
+
+        .social-icon.email {
+            background: rgba(0, 120, 212, 0.15);
+            color: #0078D4;
+        }
+
+        .social-icon.fiverr {
+            background: rgba(29, 191, 115, 0.15);
+            color: #1DBF73;
+        }
+
+        .social-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .social-handle {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        footer span {
+            color: var(--accent);
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            nav {
+                padding: 1rem 1.2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                font-size: 0.75rem;
+            }
+
+            .container {
+                padding: 0 1.2rem;
+            }
+
+            section {
+                padding: 4rem 0;
+            }
+
+            .freelance-card {
+                padding: 2rem;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glow-orb one"></div>
+    <div class="glow-orb two"></div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-logo">&lt;laurin /&gt;</div>
+        <ul class="nav-links">
+            <li><a href="#about">Über mich</a></li>
+            <li><a href="#stack">Stack</a></li>
+            <li><a href="#projects">Projekte</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <div class="container">
+        <section class="hero" id="about">
+            <div class="hero-label">// Willkommen auf meiner Seite</div>
+            <h1>Hey, ich bin <span>Laurin</span>.</h1>
+            <p class="hero-desc">
+                18 Jahre alt, aus Deutschland. Seit über sechs Jahren leidenschaftlicher Entwickler —
+                von Java über Kotlin bis hin zum modernen Web-Stack mit React & TypeScript.
+                Aktuell bei <strong style="color:var(--text)">@McScrims-Network</strong>.
+            </p>
+            <div class="hero-cta">
+                <a href="https://github.com/TDSTOS" target="_blank" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                    GitHub
+                </a>
+                <a href="#contact" class="btn btn-ghost">Kontakt aufnehmen</a>
+            </div>
+        </section>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Tech Stack -->
+    <div class="container">
+        <section id="stack">
+            <div class="reveal">
+                <div class="section-tag">// Technologien</div>
+                <h2 class="section-title">Mein Tech Stack</h2>
+                <p class="section-desc">Sprachen, Frameworks und Tools mit denen ich täglich arbeite.</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card reveal">
+                    <div class="skill-icon">☕</div>
+                    <div class="skill-name">Java</div>
+                    <div class="skill-exp">6 Jahre</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🟣</div>
+                    <div class="skill-name">Kotlin</div>
+                    <div class="skill-exp">4 Jahre</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🔷</div>
+                    <div class="skill-name">TypeScript</div>
+                    <div class="skill-exp">1+ Jahr</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">⚛️</div>
+                    <div class="skill-name">React</div>
+                    <div class="skill-exp">1+ Jahr</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">⚡</div>
+                    <div class="skill-name">Vite</div>
+                    <div class="skill-exp">1+ Jahr</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🌊</div>
+                    <div class="skill-name">Tailwind CSS</div>
+                    <div class="skill-exp">1+ Jahr</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🟢</div>
+                    <div class="skill-name">Node.js</div>
+                    <div class="skill-exp">1+ Jahr</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🖥️</div>
+                    <div class="skill-name">Electron</div>
+                    <div class="skill-exp">1+ Jahr</div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🐘</div>
+                    <div class="skill-name">Gradle</div>
+                    <div class="skill-exp"></div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🧠</div>
+                    <div class="skill-name">IntelliJ IDEA</div>
+                    <div class="skill-exp"></div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">🔀</div>
+                    <div class="skill-name">Git</div>
+                    <div class="skill-exp"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Projects -->
+    <div class="container">
+        <section id="projects">
+            <div class="reveal">
+                <div class="section-tag">// Projekte</div>
+                <h2 class="section-title">Woran ich arbeite</h2>
+                <p class="section-desc">Aktuelle und laufende Projekte.</p>
+            </div>
+            <div class="project-card reveal">
+                <div class="project-badge">In Entwicklung</div>
+                <h3>Minecraft Server</h3>
+                <p>
+                    Ein einzigartiger Minecraft-Server mit dem Ziel, innovative Gameplay-Features zu
+                    implementieren und das Spielerlebnis auf ein neues Level zu heben. Custom Plugins,
+                    einzigartige Mechaniken und eine aktive Community.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Freelance -->
+    <div class="container">
+        <section>
+            <div class="reveal">
+                <div class="section-tag">// Freelance</div>
+                <h2 class="section-title">Zusammenarbeiten?</h2>
+            </div>
+            <div class="freelance-card reveal">
+                <div class="freelance-text">
+                    <h3>Ich baue deine Idee.</h3>
+                    <p>Personalisierte Websites und Desktop-Applikationen — professionell und zuverlässig.</p>
+                </div>
+                <a href="https://de.fiverr.com/s/qD1p5jX" target="_blank" class="btn btn-primary">
+                    Auf Fiverr beauftragen →
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Contact -->
+    <div class="container">
+        <section id="contact">
+            <div class="reveal">
+                <div class="section-tag">// Let's connect</div>
+                <h2 class="section-title">Kontakt & Socials</h2>
+                <p class="section-desc">Schreib mir gerne — ich bin immer offen für neue Projekte und Ideen.</p>
+            </div>
+            <div class="socials-grid">
+                <a href="https://github.com/TDSTOS" target="_blank" class="social-card reveal">
+                    <div class="social-icon github">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="social-label">GitHub</div>
+                        <div class="social-handle">TDSTOS</div>
+                    </div>
+                </a>
+                <a href="https://discord.com" target="_blank" class="social-card reveal">
+                    <div class="social-icon discord">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="social-label">Discord</div>
+                        <div class="social-handle">laurinvl</div>
+                    </div>
+                </a>
+                <a href="https://twitch.tv/lauringvl" target="_blank" class="social-card reveal">
+                    <div class="social-icon twitch">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="social-label">Twitch</div>
+                        <div class="social-handle">lauringvl</div>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/@laurinvl" target="_blank" class="social-card reveal">
+                    <div class="social-icon youtube">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="social-label">YouTube</div>
+                        <div class="social-handle">@laurinvl</div>
+                    </div>
+                </a>
+                <a href="mailto:todesstoss@outlook.de" class="social-card reveal">
+                    <div class="social-icon email">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M0 3v18h24V3H0zm21.518 2L12 12.713 2.482 5h19.036zM2 19V7.183l10 7.927 10-7.927V19H2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="social-label">E-Mail</div>
+                        <div class="social-handle">todesstoss@outlook.de</div>
+                    </div>
+                </a>
+                <a href="https://de.fiverr.com/s/qD1p5jX" target="_blank" class="social-card reveal">
+                    <div class="social-icon fiverr">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M23.004 15.588a.995.995 0 1 0 .002-1.99.995.995 0 0 0-.002 1.99zm-.996-3.705h-.85c-.546 0-.898.315-.898.756h-1.597c0-1.227.869-2.126 2.243-2.126h1.102v-2.04H21.91c-1.924 0-3.32 1.178-3.32 2.882v1.284h-1.33v1.37h1.33v4.876h1.597v-4.877h2.291l.283-1.37h-2.574v-.899c0-.377.252-.631.688-.631h1.886v-.001l-.283-1.224z M8.57 15.588a.995.995 0 1 0 .002-1.99.995.995 0 0 0-.002 1.99zm4.578-5.088H7.554v1.37h1.847v4.877h1.597v-4.877h2.15v-1.37zM5.63 15.588a.995.995 0 1 0 .002-1.99.995.995 0 0 0-.002 1.99zm-.996-5.088H.002v1.37h1.847v4.877H3.446v-4.877h1.188v-1.37z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="social-label">Fiverr</div>
+                        <div class="social-handle">Hire me</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <span>Laurin</span> — Built with passion.</p>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, i * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>
