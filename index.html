@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Laurin — Developer Portfolio</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%237F52FF'/><text x='50' y='72' font-size='65' font-family='Arial,sans-serif' font-weight='bold' fill='white' text-anchor='middle'>L</text></svg>" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%237F52FF'/><text x='50' y='72' font-size='65' font-family='Arial,sans-serif' font-weight='bold' fill='white' text-anchor='middle'>L</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -133,6 +134,12 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
         .nav-links {
             display: flex;
             gap: 2rem;
@@ -151,6 +158,67 @@
 
         .nav-links a:hover {
             color: var(--accent);
+        }
+
+        /* ── Language Switcher ── */
+        .lang-switcher {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .lang-btn {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.4rem 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .lang-btn:hover {
+            color: var(--text);
+        }
+
+        .lang-btn.active {
+            color: #fff;
+        }
+
+        .lang-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            height: calc(100% - 4px);
+            width: calc(50% - 2px);
+            background: var(--accent);
+            border-radius: 8px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 16px rgba(127, 82, 255, 0.3);
+        }
+
+        .lang-slider.right {
+            transform: translateX(100%);
+        }
+
+        .lang-flag {
+            font-size: 0.9rem;
+            line-height: 1;
         }
 
         /* ── Layout ── */
@@ -532,6 +600,10 @@
                 padding: 1rem 1.2rem;
             }
 
+            .nav-right {
+                gap: 1rem;
+            }
+
             .nav-links {
                 gap: 1rem;
             }
@@ -561,6 +633,14 @@
             .btn {
                 justify-content: center;
             }
+
+            .lang-btn span:not(.lang-flag) {
+                display: none;
+            }
+
+            .lang-btn {
+                padding: 0.4rem 0.55rem;
+            }
         }
     </style>
 </head>
@@ -573,23 +653,38 @@
     <!-- Nav -->
     <nav>
         <div class="nav-logo">&lt;laurin /&gt;</div>
-        <ul class="nav-links">
-            <li><a href="#about">Über mich</a></li>
-            <li><a href="#stack">Stack</a></li>
-            <li><a href="#projects">Projekte</a></li>
-            <li><a href="#contact">Kontakt</a></li>
-        </ul>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="#about" data-i18n="nav.about">About Me</a></li>
+                <li><a href="#stack" data-i18n="nav.stack">Stack</a></li>
+                <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
+                <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+            </ul>
+
+            <!-- Language Switcher -->
+            <div class="lang-switcher">
+                <div class="lang-slider" id="langSlider"></div>
+                <button class="lang-btn active" data-lang="en" id="btnEN" onclick="setLanguage('en')">
+                    <span class="lang-flag">🇬🇧</span>
+                    <span>EN</span>
+                </button>
+                <button class="lang-btn" data-lang="de" id="btnDE" onclick="setLanguage('de')">
+                    <span class="lang-flag">🇩🇪</span>
+                    <span>DE</span>
+                </button>
+            </div>
+        </div>
     </nav>
 
     <!-- Hero -->
     <div class="container">
         <section class="hero" id="about">
-            <div class="hero-label">// Willkommen auf meiner Seite</div>
-            <h1>Hey, ich bin <span>Laurin</span>.</h1>
-            <p class="hero-desc">
-                18 Jahre alt, aus Deutschland. Seit über sechs Jahren leidenschaftlicher Entwickler —
-                von Java über Kotlin bis hin zum modernen Web-Stack mit React & TypeScript.
-                Aktuell bei <strong style="color:var(--text)">@McScrims-Network</strong>.
+            <div class="hero-label" data-i18n="hero.label">// Welcome to my site</div>
+            <h1 data-i18n="hero.heading" data-i18n-html="true">Hey, I'm <span>Laurin</span>.</h1>
+            <p class="hero-desc" data-i18n="hero.desc" data-i18n-html="true">
+                18 years old, from Germany. Passionate developer for over six years —
+                from Java to Kotlin to the modern web stack with React & TypeScript.
+                Currently at <strong style="color:var(--text)">@McScrims-Network</strong>.
             </p>
             <div class="hero-cta">
                 <a href="https://github.com/TDSTOS" target="_blank" class="btn btn-primary">
@@ -599,7 +694,7 @@
                     </svg>
                     GitHub
                 </a>
-                <a href="#contact" class="btn btn-ghost">Kontakt aufnehmen</a>
+                <a href="#contact" class="btn btn-ghost" data-i18n="hero.cta">Get in Touch</a>
             </div>
         </section>
     </div>
@@ -610,50 +705,50 @@
     <div class="container">
         <section id="stack">
             <div class="reveal">
-                <div class="section-tag">// Technologien</div>
-                <h2 class="section-title">Mein Tech Stack</h2>
-                <p class="section-desc">Sprachen, Frameworks und Tools mit denen ich täglich arbeite.</p>
+                <div class="section-tag" data-i18n="stack.tag">// Technologies</div>
+                <h2 class="section-title" data-i18n="stack.title">My Tech Stack</h2>
+                <p class="section-desc" data-i18n="stack.desc">Languages, frameworks, and tools I work with every day.</p>
             </div>
             <div class="skills-grid">
                 <div class="skill-card reveal">
                     <div class="skill-icon">☕</div>
                     <div class="skill-name">Java</div>
-                    <div class="skill-exp">6 Jahre</div>
+                    <div class="skill-exp" data-i18n="stack.java_exp">6 years</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">🟣</div>
                     <div class="skill-name">Kotlin</div>
-                    <div class="skill-exp">4 Jahre</div>
+                    <div class="skill-exp" data-i18n="stack.kotlin_exp">4 years</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">🔷</div>
                     <div class="skill-name">TypeScript</div>
-                    <div class="skill-exp">1+ Jahr</div>
+                    <div class="skill-exp" data-i18n="stack.one_year">1+ year</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">⚛️</div>
                     <div class="skill-name">React</div>
-                    <div class="skill-exp">1+ Jahr</div>
+                    <div class="skill-exp" data-i18n="stack.one_year">1+ year</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">⚡</div>
                     <div class="skill-name">Vite</div>
-                    <div class="skill-exp">1+ Jahr</div>
+                    <div class="skill-exp" data-i18n="stack.one_year">1+ year</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">🌊</div>
                     <div class="skill-name">Tailwind CSS</div>
-                    <div class="skill-exp">1+ Jahr</div>
+                    <div class="skill-exp" data-i18n="stack.one_year">1+ year</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">🟢</div>
                     <div class="skill-name">Node.js</div>
-                    <div class="skill-exp">1+ Jahr</div>
+                    <div class="skill-exp" data-i18n="stack.one_year">1+ year</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">🖥️</div>
                     <div class="skill-name">Electron</div>
-                    <div class="skill-exp">1+ Jahr</div>
+                    <div class="skill-exp" data-i18n="stack.one_year">1+ year</div>
                 </div>
                 <div class="skill-card reveal">
                     <div class="skill-icon">🐘</div>
@@ -680,17 +775,17 @@
     <div class="container">
         <section id="projects">
             <div class="reveal">
-                <div class="section-tag">// Projekte</div>
-                <h2 class="section-title">Woran ich arbeite</h2>
-                <p class="section-desc">Aktuelle und laufende Projekte.</p>
+                <div class="section-tag" data-i18n="projects.tag">// Projects</div>
+                <h2 class="section-title" data-i18n="projects.title">What I'm Working On</h2>
+                <p class="section-desc" data-i18n="projects.desc">Current and ongoing projects.</p>
             </div>
             <div class="project-card reveal">
-                <div class="project-badge">In Entwicklung</div>
-                <h3>Minecraft Server</h3>
-                <p>
-                    Ein einzigartiger Minecraft-Server mit dem Ziel, innovative Gameplay-Features zu
-                    implementieren und das Spielerlebnis auf ein neues Level zu heben. Custom Plugins,
-                    einzigartige Mechaniken und eine aktive Community.
+                <div class="project-badge" data-i18n="projects.badge">In Development</div>
+                <h3 data-i18n="projects.mc_title">Minecraft Server</h3>
+                <p data-i18n="projects.mc_desc">
+                    A unique Minecraft server aiming to implement innovative gameplay features
+                    and take the player experience to the next level. Custom plugins,
+                    unique mechanics, and an active community.
                 </p>
             </div>
         </section>
@@ -702,16 +797,17 @@
     <div class="container">
         <section>
             <div class="reveal">
-                <div class="section-tag">// Freelance</div>
-                <h2 class="section-title">Zusammenarbeiten?</h2>
+                <div class="section-tag" data-i18n="freelance.tag">// Freelance</div>
+                <h2 class="section-title" data-i18n="freelance.title">Work Together?</h2>
             </div>
             <div class="freelance-card reveal">
                 <div class="freelance-text">
-                    <h3>Ich baue deine Idee.</h3>
-                    <p>Personalisierte Websites und Desktop-Applikationen — professionell und zuverlässig.</p>
+                    <h3 data-i18n="freelance.heading">I'll build your idea.</h3>
+                    <p data-i18n="freelance.desc">Custom websites and desktop applications — professional and reliable.</p>
                 </div>
-                <a href="https://de.fiverr.com/laurinfldr" target="_blank" class="btn btn-primary">
-                    Auf Fiverr beauftragen →
+                <a href="https://de.fiverr.com/laurinfldr" target="_blank" class="btn btn-primary"
+                    data-i18n="freelance.cta">
+                    Hire on Fiverr →
                 </a>
             </div>
         </section>
@@ -723,9 +819,9 @@
     <div class="container">
         <section id="contact">
             <div class="reveal">
-                <div class="section-tag">// Let's connect</div>
-                <h2 class="section-title">Kontakt & Socials</h2>
-                <p class="section-desc">Schreib mir gerne — ich bin immer offen für neue Projekte und Ideen.</p>
+                <div class="section-tag" data-i18n="contact.tag">// Let's connect</div>
+                <h2 class="section-title" data-i18n="contact.title">Contact & Socials</h2>
+                <p class="section-desc" data-i18n="contact.desc">Feel free to reach out — I'm always open to new projects and ideas.</p>
             </div>
             <div class="socials-grid">
                 <a href="https://github.com/TDSTOS" target="_blank" class="social-card reveal">
@@ -797,7 +893,7 @@
                     </div>
                     <div>
                         <div class="social-label">Fiverr</div>
-                        <div class="social-handle">Hire me</div>
+                        <div class="social-handle" data-i18n="contact.hire">Hire me</div>
                     </div>
                 </a>
             </div>
@@ -806,11 +902,165 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 <span>Laurin</span> — Built with passion.</p>
+        <p data-i18n="footer.text" data-i18n-html="true">&copy; 2026 <span>Laurin</span> — Built with passion.</p>
     </footer>
 
     <script>
-        // Scroll reveal
+        /* ═══════════════════════════════════════════
+           i18n — Lightweight Translation System
+           ═══════════════════════════════════════════ */
+
+        const translations = {
+            en: {
+                // Nav
+                'nav.about': 'About Me',
+                'nav.stack': 'Stack',
+                'nav.projects': 'Projects',
+                'nav.contact': 'Contact',
+
+                // Hero
+                'hero.label': '// Welcome to my site',
+                'hero.heading': 'Hey, I\'m <span>Laurin</span>.',
+                'hero.desc': '18 years old, from Germany. Passionate developer for over six years — from Java to Kotlin to the modern web stack with React & TypeScript. Currently at <strong style="color:var(--text)">@McScrims-Network</strong>.',
+                'hero.cta': 'Get in Touch',
+
+                // Stack
+                'stack.tag': '// Technologies',
+                'stack.title': 'My Tech Stack',
+                'stack.desc': 'Languages, frameworks, and tools I work with every day.',
+                'stack.java_exp': '6 years',
+                'stack.kotlin_exp': '4 years',
+                'stack.one_year': '1+ year',
+
+                // Projects
+                'projects.tag': '// Projects',
+                'projects.title': 'What I\'m Working On',
+                'projects.desc': 'Current and ongoing projects.',
+                'projects.badge': 'In Development',
+                'projects.mc_title': 'Minecraft Server',
+                'projects.mc_desc': 'A unique Minecraft server aiming to implement innovative gameplay features and take the player experience to the next level. Custom plugins, unique mechanics, and an active community.',
+
+                // Freelance
+                'freelance.tag': '// Freelance',
+                'freelance.title': 'Work Together?',
+                'freelance.heading': 'I\'ll build your idea.',
+                'freelance.desc': 'Custom websites and desktop applications — professional and reliable.',
+                'freelance.cta': 'Hire on Fiverr →',
+
+                // Contact
+                'contact.tag': '// Let\'s connect',
+                'contact.title': 'Contact & Socials',
+                'contact.desc': 'Feel free to reach out — I\'m always open to new projects and ideas.',
+                'contact.hire': 'Hire me',
+
+                // Footer
+                'footer.text': '&copy; 2026 <span>Laurin</span> — Built with passion.'
+            },
+
+            de: {
+                // Nav
+                'nav.about': 'Über mich',
+                'nav.stack': 'Stack',
+                'nav.projects': 'Projekte',
+                'nav.contact': 'Kontakt',
+
+                // Hero
+                'hero.label': '// Willkommen auf meiner Seite',
+                'hero.heading': 'Hey, ich bin <span>Laurin</span>.',
+                'hero.desc': '18 Jahre alt, aus Deutschland. Seit über sechs Jahren leidenschaftlicher Entwickler — von Java über Kotlin bis hin zum modernen Web-Stack mit React & TypeScript. Aktuell bei <strong style="color:var(--text)">@McScrims-Network</strong>.',
+                'hero.cta': 'Kontakt aufnehmen',
+
+                // Stack
+                'stack.tag': '// Technologien',
+                'stack.title': 'Mein Tech Stack',
+                'stack.desc': 'Sprachen, Frameworks und Tools mit denen ich täglich arbeite.',
+                'stack.java_exp': '6 Jahre',
+                'stack.kotlin_exp': '4 Jahre',
+                'stack.one_year': '1+ Jahr',
+
+                // Projects
+                'projects.tag': '// Projekte',
+                'projects.title': 'Woran ich arbeite',
+                'projects.desc': 'Aktuelle und laufende Projekte.',
+                'projects.badge': 'In Entwicklung',
+                'projects.mc_title': 'Minecraft Server',
+                'projects.mc_desc': 'Ein einzigartiger Minecraft-Server mit dem Ziel, innovative Gameplay-Features zu implementieren und das Spielerlebnis auf ein neues Level zu heben. Custom Plugins, einzigartige Mechaniken und eine aktive Community.',
+
+                // Freelance
+                'freelance.tag': '// Freelance',
+                'freelance.title': 'Zusammenarbeiten?',
+                'freelance.heading': 'Ich baue deine Idee.',
+                'freelance.desc': 'Personalisierte Websites und Desktop-Applikationen — professionell und zuverlässig.',
+                'freelance.cta': 'Auf Fiverr beauftragen →',
+
+                // Contact
+                'contact.tag': '// Let\'s connect',
+                'contact.title': 'Kontakt & Socials',
+                'contact.desc': 'Schreib mir gerne — ich bin immer offen für neue Projekte und Ideen.',
+                'contact.hire': 'Hire me',
+
+                // Footer
+                'footer.text': '&copy; 2026 <span>Laurin</span> — Mit Leidenschaft gebaut.'
+            }
+        };
+
+        /* ── Core translation engine ── */
+
+        function applyTranslations(lang) {
+            const dict = translations[lang];
+            if (!dict) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (!dict[key]) return;
+
+                // Use innerHTML for elements that contain markup (spans, strongs, etc.)
+                if (el.hasAttribute('data-i18n-html')) {
+                    el.innerHTML = dict[key];
+                } else {
+                    el.textContent = dict[key];
+                }
+            });
+
+            // Update <html lang="...">
+            document.documentElement.lang = lang;
+        }
+
+        function setLanguage(lang) {
+            // Save preference
+            localStorage.setItem('lang', lang);
+
+            // Apply translations
+            applyTranslations(lang);
+
+            // Update toggle UI
+            const slider = document.getElementById('langSlider');
+            const btnEN = document.getElementById('btnEN');
+            const btnDE = document.getElementById('btnDE');
+
+            if (lang === 'de') {
+                slider.classList.add('right');
+                btnDE.classList.add('active');
+                btnEN.classList.remove('active');
+            } else {
+                slider.classList.remove('right');
+                btnEN.classList.add('active');
+                btnDE.classList.remove('active');
+            }
+        }
+
+        /* ── Initialize on page load ── */
+
+        (function initI18n() {
+            // Priority: localStorage → default (en)
+            const savedLang = localStorage.getItem('lang') || 'en';
+            setLanguage(savedLang);
+        })();
+
+        /* ═══════════════════════════════════════════
+           Scroll Reveal (original)
+           ═══════════════════════════════════════════ */
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, i) => {
                 if (entry.isIntersecting) {
