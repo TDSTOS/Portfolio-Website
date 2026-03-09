@@ -457,6 +457,49 @@
             line-height: 1.8;
         }
 
+        /* ── X / Twitter Timeline ── */
+        .x-timeline-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            max-width: 600px;
+        }
+
+        .x-timeline-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1d9bf0, var(--accent));
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .x-timeline-inner {
+            padding: 1.5rem;
+            min-height: 200px;
+        }
+
+        .x-follow-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            color: #1d9bf0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .x-follow-link:hover {
+            opacity: 0.8;
+        }
+
         /* ── Freelance ── */
         .freelance-card {
             background: linear-gradient(135deg, var(--bg-card), rgba(127, 82, 255, 0.08));
@@ -653,17 +696,14 @@
                 gap: 0.75rem;
             }
 
-            /* Hide desktop links */
             .nav-links {
                 display: none;
             }
 
-            /* Show hamburger */
             .nav-burger {
                 display: block;
             }
 
-            /* Mobile dropdown panel */
             .mobile-menu {
                 display: block;
                 position: fixed;
@@ -742,6 +782,10 @@
 
             .lang-btn {
                 padding: 0.4rem 0.55rem;
+            }
+
+            .x-timeline-wrapper {
+                max-width: 100%;
             }
         }
     </style>
@@ -912,6 +956,35 @@
 
     <div class="divider"></div>
 
+    <!-- X / Twitter Timeline -->
+    <div class="container">
+        <section id="posts">
+            <div class="reveal">
+                <div class="section-tag" data-i18n="posts.tag">// Latest Posts</div>
+                <h2 class="section-title" data-i18n="posts.title">From X</h2>
+                <p class="section-desc" data-i18n="posts.desc">My latest thoughts and updates.</p>
+            </div>
+            <div class="x-timeline-wrapper reveal">
+                <div class="x-timeline-inner">
+                    <a class="twitter-timeline"
+                       data-theme="dark"
+                       data-chrome="noheader nofooter noborders transparent"
+                       data-tweet-limit="5"
+                       data-dnt="true"
+                       href="https://twitter.com/TDSTOS_Dev">
+                        Loading posts by @TDSTOS_Dev…
+                    </a>
+                </div>
+            </div>
+            <a class="x-follow-link reveal" href="https://x.com/TDSTOS_Dev" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span data-i18n="posts.follow">Follow @TDSTOS_Dev on X</span>
+            </a>
+        </section>
+    </div>
+
+    <div class="divider"></div>
+
     <!-- Freelance -->
     <div class="container">
         <section>
@@ -991,7 +1064,7 @@
                         <div class="social-handle">@laurinvl</div>
                     </div>
                 </a>
-                <a href="/cdn-cgi/l/email-protection#1763787372646463786464577862637b78787c397372" class="social-card reveal">
+                <a href="mailto:contact@laurin.dev" class="social-card reveal">
                     <div class="social-icon email">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -1000,7 +1073,7 @@
                     </div>
                     <div>
                         <div class="social-label">E-Mail</div>
-                        <div class="social-handle"><span class="__cf_email__" data-cfemail="86f2e9e2e3f5f5f2e9f5f5c6e9f3f2eae9e9eda8e2e3">[email&#160;protected]</span></div>
+                        <div class="social-handle">contact@laurin.dev</div>
                     </div>
                 </a>
                 <a href="https://de.fiverr.com/laurinfldr" target="_blank" class="social-card reveal">
@@ -1024,7 +1097,10 @@
         <p data-i18n="footer.text" data-i18n-html="true">&copy; 2026 <span>Laurin</span> — Built with passion.</p>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <!-- X / Twitter Widget Script -->
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    <script>
         /* ═══════════════════════════════════════════
            Mobile Menu Toggle
            ═══════════════════════════════════════════ */
@@ -1037,7 +1113,6 @@
             mobileMenu.classList.toggle('open');
         });
 
-        // Close menu on link click
         document.querySelectorAll('.mobile-link').forEach(link => {
             link.addEventListener('click', () => {
                 burger.classList.remove('open');
@@ -1051,99 +1126,79 @@
 
         const translations = {
             en: {
-                // Nav
                 'nav.about': 'About Me',
                 'nav.stack': 'Stack',
                 'nav.projects': 'Projects',
                 'nav.contact': 'Contact',
-
-                // Hero
                 'hero.label': '// Welcome to my site',
                 'hero.heading': 'Hey, I\'m <span>Laurin</span>.',
                 'hero.desc': '18 years old, from Germany. Passionate developer for over six years — from Java to Kotlin to the modern web stack with React & TypeScript. Currently at <strong style="color:var(--text)">@McScrims-Network</strong>.',
                 'hero.cta': 'Get in Touch',
-
-                // Stack
                 'stack.tag': '// Technologies',
                 'stack.title': 'My Tech Stack',
                 'stack.desc': 'Languages, frameworks, and tools I work with every day.',
                 'stack.java_exp': '6 years',
                 'stack.kotlin_exp': '4 years',
                 'stack.one_year': '1+ year',
-
-                // Projects
                 'projects.tag': '// Projects',
                 'projects.title': 'What I\'m Working On',
                 'projects.desc': 'Current and ongoing projects.',
                 'projects.badge': 'In Development',
                 'projects.mc_title': 'Minecraft Server',
                 'projects.mc_desc': 'A unique Minecraft server aiming to implement innovative gameplay features and take the player experience to the next level. Custom plugins, unique mechanics, and an active community.',
-
-                // Freelance
+                'posts.tag': '// Latest Posts',
+                'posts.title': 'From X',
+                'posts.desc': 'My latest thoughts and updates.',
+                'posts.follow': 'Follow @TDSTOS_Dev on X',
                 'freelance.tag': '// Freelance',
                 'freelance.title': 'Work Together?',
                 'freelance.heading': 'I\'ll build your idea.',
                 'freelance.desc': 'Custom websites and desktop applications — professional and reliable.',
                 'freelance.cta': 'Hire on Fiverr →',
-
-                // Contact
                 'contact.tag': '// Let\'s connect',
                 'contact.title': 'Contact & Socials',
                 'contact.desc': 'Feel free to reach out — I\'m always open to new projects and ideas.',
                 'contact.hire': 'Hire me',
-
-                // Footer
                 'footer.text': '&copy; 2026 <span>Laurin</span> — Built with passion.'
             },
 
             de: {
-                // Nav
                 'nav.about': 'Über mich',
                 'nav.stack': 'Stack',
                 'nav.projects': 'Projekte',
                 'nav.contact': 'Kontakt',
-
-                // Hero
                 'hero.label': '// Willkommen auf meiner Seite',
                 'hero.heading': 'Hey, ich bin <span>Laurin</span>.',
                 'hero.desc': '18 Jahre alt, aus Deutschland. Seit über sechs Jahren leidenschaftlicher Entwickler — von Java über Kotlin bis hin zum modernen Web-Stack mit React & TypeScript. Aktuell bei <strong style="color:var(--text)">@McScrims-Network</strong>.',
                 'hero.cta': 'Kontakt aufnehmen',
-
-                // Stack
                 'stack.tag': '// Technologien',
                 'stack.title': 'Mein Tech Stack',
                 'stack.desc': 'Sprachen, Frameworks und Tools mit denen ich täglich arbeite.',
                 'stack.java_exp': '6 Jahre',
                 'stack.kotlin_exp': '4 Jahre',
                 'stack.one_year': '1+ Jahr',
-
-                // Projects
                 'projects.tag': '// Projekte',
                 'projects.title': 'Woran ich arbeite',
                 'projects.desc': 'Aktuelle und laufende Projekte.',
                 'projects.badge': 'In Entwicklung',
                 'projects.mc_title': 'Minecraft Server',
                 'projects.mc_desc': 'Ein einzigartiger Minecraft-Server mit dem Ziel, innovative Gameplay-Features zu implementieren und das Spielerlebnis auf ein neues Level zu heben. Custom Plugins, einzigartige Mechaniken und eine aktive Community.',
-
-                // Freelance
+                'posts.tag': '// Neueste Beiträge',
+                'posts.title': 'Von X',
+                'posts.desc': 'Meine neuesten Gedanken und Updates.',
+                'posts.follow': '@TDSTOS_Dev auf X folgen',
                 'freelance.tag': '// Freelance',
                 'freelance.title': 'Zusammenarbeiten?',
                 'freelance.heading': 'Ich baue deine Idee.',
                 'freelance.desc': 'Personalisierte Websites und Desktop-Applikationen — professionell und zuverlässig.',
                 'freelance.cta': 'Auf Fiverr beauftragen →',
-
-                // Contact
                 'contact.tag': '// Let\'s connect',
                 'contact.title': 'Kontakt & Socials',
                 'contact.desc': 'Schreib mir gerne — ich bin immer offen für neue Projekte und Ideen.',
                 'contact.hire': 'Hire me',
-
-                // Footer
                 'footer.text': '&copy; 2026 <span>Laurin</span> — Mit Leidenschaft gebaut.'
             }
         };
-
-        /* ── Core translation engine ── */
 
         function applyTranslations(lang) {
             const dict = translations[lang];
@@ -1153,7 +1208,6 @@
                 const key = el.getAttribute('data-i18n');
                 if (!dict[key]) return;
 
-                // Use innerHTML for elements that contain markup (spans, strongs, etc.)
                 if (el.hasAttribute('data-i18n-html')) {
                     el.innerHTML = dict[key];
                 } else {
@@ -1161,18 +1215,13 @@
                 }
             });
 
-            // Update <html lang="...">
             document.documentElement.lang = lang;
         }
 
         function setLanguage(lang) {
-            // Save preference
             localStorage.setItem('lang', lang);
-
-            // Apply translations
             applyTranslations(lang);
 
-            // Update toggle UI
             const slider = document.getElementById('langSlider');
             const btnEN = document.getElementById('btnEN');
             const btnDE = document.getElementById('btnDE');
@@ -1188,16 +1237,13 @@
             }
         }
 
-        /* ── Initialize on page load ── */
-
         (function initI18n() {
-            // Priority: localStorage → default (en)
             const savedLang = localStorage.getItem('lang') || 'en';
             setLanguage(savedLang);
         })();
 
         /* ═══════════════════════════════════════════
-           Scroll Reveal (original)
+           Scroll Reveal
            ═══════════════════════════════════════════ */
 
         const observer = new IntersectionObserver((entries) => {
